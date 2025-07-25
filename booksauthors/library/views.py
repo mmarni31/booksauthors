@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .models import Book, Author
 # GET /api/books/
+#TEST CHANGE FOR GIT BRANCHING
 class BookListView(View):
     def get(self, request):
         books = Book.objects.all()
