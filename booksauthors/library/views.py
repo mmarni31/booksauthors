@@ -23,6 +23,7 @@ class BookListView(View):
 # POST /api/books/search/
 @method_decorator(csrf_exempt, name='dispatch')
 class BookSearchView(View):
+    '''this is method is for post only'''
     def post(self, request):
         try:
             data = json.loads(request.body.decode('utf-8'))
