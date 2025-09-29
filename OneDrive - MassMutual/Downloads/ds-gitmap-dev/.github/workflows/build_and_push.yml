@@ -1,0 +1,32 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+name: Checkout code
+        uses: actions/checkout@v4
+
+name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::213493339883:role/app-gitmap-gha-role
+          aws-region: us-east-1
+
+name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 \
+            | docker login --username AWS --password-stdin 213493339883.dkr.ecr.us-east-1.amazonaws.com
+name: Build & Push Jenkins Job Details
+        run: |
+          IMAGE=app-gitmap-sfn-ecr-repo-jenkins-job-details
+          ECR_URL=213493339883.dkr.ecr.us-east-1.amazonaws.com/$IMAGE
+docker build -t $IMAGE -f Dockerfile.get_jenkins_job_details .
+          docker tag $IMAGE:latest $ECR_URL:latest
+          docker push $ECR_URL:latest
+          
+name: Build & Push Repo Core Details
+        run: |
+          IMAGE=app-gitmap-sfn-ecr-repo-core-details
+          ECR_URL=213493339883.dkr.ecr.us-east-1.amazonaws.com/$IMAGE
+docker build -t $IMAGE -f Dockerfile.get_repo_core_details .
+          docker tag $IMAGE:latest $ECR_URL:latest
+          docker push $ECR_URL:latest
